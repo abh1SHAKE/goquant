@@ -142,6 +142,12 @@ export default function OrderSimulationForm({
                             type="number"
                             value={price}
                             onChange={(e) => handlePriceChange(e.target.value)}
+                            onWheel={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                (e.target as HTMLInputElement).blur();
+                                setTimeout(() => (e.target as HTMLInputElement).focus(), 0);
+                            }}
                             placeholder="Enter price"
                             step="0.0001"
                             className="w-full font-sora font-semibold bg-dark border-2 border-[#3e3e3e] rounded-md py-2 px-4 text-[#ffffffcc] focus:outline-none"
@@ -157,6 +163,12 @@ export default function OrderSimulationForm({
                         type="number"
                         value={quantity}
                         onChange={(e) => handleQuantityChange(e.target.value)}
+                        onWheel={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            (e.target as HTMLInputElement).blur();
+                            setTimeout(() => (e.target as HTMLInputElement).focus(), 0);
+                        }}
                         placeholder="Enter quantity"
                         step="0.01"
                         className="w-full font-sora font-semibold bg-dark border-2 border-[#3e3e3e] rounded-md py-2 px-4 text-[#ffffffcc] focus:outline-none"
