@@ -4,16 +4,22 @@
 type OrderBookLevel = [string, string];
 
 interface DeribitMessage {
-    method: 'subscription';
-    params: {
+    jsonrpc: string;
+    method?: string;
+    params?: {
         channel: string;
         data: {
             bids: OrderBookLevel[];
             asks: OrderBookLevel[];
-            type: 'snapshot' | 'change';
+            change_id: number;
             timestamp: number;
         };
     };
+    error?: {
+        code: number;
+        message: string;
+    };
+    id?: number;
 }
 
 type OrderBookCallback = (
@@ -22,30 +28,34 @@ type OrderBookCallback = (
     isSnapshot?: boolean
 ) => void;
 
-let socket: WebSocket | null = null;
-
 export function connectDeribitOrderBook(
     symbol: string,
     onOrderBookUpdate: OrderBookCallback,
     onError?: (err: string) => void
 ): () => void {
-    if (socket) {
-        socket.close();
+    // Convert symbol to Deribit format
+    let formattedSymbol: string;
+    if (symbol === 'BTC-USD') formattedSymbol = 'BTC-PERPETUAL';
+    else if (symbol === 'ETH-USD') formattedSymbol = 'ETH-PERPETUAL';
+    else {
+        onError?.(`Deribit does not support symbol ${symbol}`);
+        return () => {}; // Return empty cleanup function
     }
 
-    // Deribit WebSocket URL
-    socket = new WebSocket('wss://www.deribit.com/ws/api/v2');
+    // Public orderbook channel (20 levels, 100ms updates)
+    const channel = `book.${formattedSymbol}.none.20.100ms`;
+    let socket: WebSocket | null = new WebSocket('wss://www.deribit.com/ws/api/v2');
 
     socket.onopen = () => {
+        console.log('Deribit WebSocket connected');
         const subscribeMsg = {
             jsonrpc: "2.0",
             method: "public/subscribe",
             id: 42,
             params: {
-                channels: [`book.${symbol}.raw`]
+                channels: [channel]
             }
         };
-
         socket?.send(JSON.stringify(subscribeMsg));
     };
 
@@ -53,17 +63,19 @@ export function connectDeribitOrderBook(
         try {
             const msg: DeribitMessage = JSON.parse(event.data);
 
-            if (msg?.method === 'subscription' && 
-                msg?.params?.channel?.startsWith('book.') && 
-                msg?.params?.data) {
-                const { bids, asks } = msg.params.data;
-                const isSnapshot = msg.params.data.type === 'snapshot';
+            // Handle subscription response
+            if (msg.id === 42) {
+                if (msg.error) {
+                    onError?.(`Deribit subscription failed: ${msg.error.message}`);
+                }
+                return;
+            }
 
-                onOrderBookUpdate(
-                    bids,
-                    asks,
-                    isSnapshot
-                );
+            // Handle order book updates
+            if (msg.method === 'subscription' && msg.params?.channel === channel) {
+                const { bids, asks } = msg.params.data;
+                // Deribit's public feed doesn't provide snapshots, always treat as updates
+                onOrderBookUpdate(bids, asks, false);
             }
         } catch (err) {
             onError?.('Failed to parse Deribit WebSocket data');
@@ -71,8 +83,8 @@ export function connectDeribitOrderBook(
         }
     };
 
-    socket.onerror = (err) => {
-        console.error('Deribit WebSocket Error:', err);
+    socket.onerror = (error) => {
+        console.error('Deribit WebSocket error:', error);
         onError?.('WebSocket connection error');
     };
 
@@ -82,18 +94,23 @@ export function connectDeribitOrderBook(
 
     return () => {
         if (socket) {
-            const unsubscribeMsg = {
-                jsonrpc: "2.0",
-                method: "public/unsubscribe",
-                id: 42,
-                params: {
-                    channels: [`book.${symbol}.raw`]
-                }
-            };
-            
-            socket.send(JSON.stringify(unsubscribeMsg));
-            socket.close();
-            socket = null;
+            console.log('Cleaning up Deribit WebSocket');
+            try {
+                const unsubscribeMsg = {
+                    jsonrpc: "2.0",
+                    method: "public/unsubscribe",
+                    id: 42,
+                    params: {
+                        channels: [channel]
+                    }
+                };
+                socket.send(JSON.stringify(unsubscribeMsg));
+                socket.close();
+            } catch (e) {
+                console.error('Deribit cleanup error:', e);
+            } finally {
+                socket = null;
+            }
         }
     };
 }

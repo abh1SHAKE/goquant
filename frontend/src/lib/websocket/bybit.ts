@@ -1,6 +1,9 @@
 // Websocket for ByBit
 // This module handles the WebSocket connection to ByBit for real-time data updates.
 
+import { convertSymbolForExchange
+    
+ } from "../symbolConverter";
 type OrderBookLevel = [string, string];
 
 interface ByBitMessage {
@@ -28,6 +31,8 @@ export function connectByBitOrderBook(
     onOrderBookUpdate: OrderBookCallback,
     onError?: (err: string) => void
 ): () => void {
+    const formattedSymbol = convertSymbolForExchange(symbol, 'ByBit');
+
     if (socket) {
         socket.close();
     }
@@ -38,7 +43,7 @@ export function connectByBitOrderBook(
     socket.onopen = () => {
         const subscribeMsg = {
             op: 'subscribe',
-            args: [`orderbook.50.${symbol}`]
+            args: [`orderbook.50.${formattedSymbol}`]
         };
 
         socket?.send(JSON.stringify(subscribeMsg));
@@ -77,7 +82,7 @@ export function connectByBitOrderBook(
         if (socket) {
             const unsubscribeMsg = {
                 op: 'unsubscribe',
-                args: [`orderbook.50.${symbol}`]
+                args: [`orderbook.50.${formattedSymbol}`]
             };
             
             socket.send(JSON.stringify(unsubscribeMsg));

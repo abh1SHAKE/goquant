@@ -24,7 +24,7 @@ export default function HomePage() {
 
 			<div className="flex flex-col md:flex-row gap-4 md:gap-6">
 				<div className="w-full md:w-[30%]">
-					<SymbolSelector selectedSymbol={symbol} onSymbolChange={setSymbol} />
+					<SymbolSelector selectedSymbol={symbol} onSymbolChange={setSymbol} venue={venue} />
 				</div>
 				<div className="w-full md:w-[70%]">
 					<OrderBookTable bids={bids} asks={asks} />
