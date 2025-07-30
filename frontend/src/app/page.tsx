@@ -9,6 +9,7 @@ import OrderBookTable from '@/components/OrderBookTable';
 import Navbar from '@/components/Navbar';
 import { Venue } from '@/components/VenueSelector';
 import SymbolSelector from '@/components/SymbolSelector';
+import OrderSimulationForm from '@/components/OrderSimulationForm';
 
 export default function HomePage() {
 	const [symbol, setSymbol] = useState('BTC-USD');
@@ -23,10 +24,12 @@ export default function HomePage() {
 			</div>
 
 			<div className="flex flex-col md:flex-row gap-4 md:gap-6">
-				<div className="w-full md:w-[30%]">
+				<div className="w-full md:w-[35%] bg-transparent md:bg-[#141414] rounded-lg p-2 md:p-4">
 					<SymbolSelector selectedSymbol={symbol} onSymbolChange={setSymbol} venue={venue} />
+
+					<OrderSimulationForm venue={venue} onVenueChange={setVenue} symbol={symbol} onSymbolChange={setSymbol}/>
 				</div>
-				<div className="w-full md:w-[70%]">
+				<div className="w-full md:w-[65%]">
 					<OrderBookTable bids={bids} asks={asks} symbol={symbol} venue={venue} />
 				</div>
 			</div>

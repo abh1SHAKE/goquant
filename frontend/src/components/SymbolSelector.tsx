@@ -77,8 +77,8 @@ export default function SymbolSelector({ selectedSymbol, onSymbolChange, venue }
     };
 
     return (
-        <div className="relative bg-transparent md:bg-[#141414] rounded-lg font-sora font-semibold p-2 md:p-4 w-full">
-            <label className="block text-lg mb-2 text-[#ffffffcc]">Symbol</label>
+        <div className="relative font-sora font-semibold w-full mb-4">
+            <label className="block text-md mb-2 text-[#ffffffcc]">Symbol</label>
             <div className="relative" ref={dropdownRef}>
                 <button
                     className="w-full min-w-[150px] px-4 py-2 border-gray text-[#ffffffcc] rounded-lg flex justify-between items-center cursor-pointer bg-dark"

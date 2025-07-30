@@ -48,3 +48,9 @@ body {
 .border-gray {
     border: 2px solid #3e3e3e;
 }
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
