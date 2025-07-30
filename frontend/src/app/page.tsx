@@ -27,7 +27,7 @@ export default function HomePage() {
 					<SymbolSelector selectedSymbol={symbol} onSymbolChange={setSymbol} venue={venue} />
 				</div>
 				<div className="w-full md:w-[70%]">
-					<OrderBookTable bids={bids} asks={asks} />
+					<OrderBookTable bids={bids} asks={asks} symbol={symbol} venue={venue} />
 				</div>
 			</div>
 		</div>

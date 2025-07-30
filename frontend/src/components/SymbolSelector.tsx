@@ -84,9 +84,9 @@ export default function SymbolSelector({ selectedSymbol, onSymbolChange, venue }
                     className="w-full min-w-[150px] px-4 py-2 border-gray text-[#ffffffcc] rounded-lg flex justify-between items-center cursor-pointer bg-dark"
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
                         {symbolIcons[selectedSymbol as keyof typeof symbolIcons]}
-                        <span>{formatDisplaySymbol(selectedSymbol)}</span>
+                        <span className="truncate">{formatDisplaySymbol(selectedSymbol)}</span>
                     </div>
                     <svg 
                         className={`w-4 h-4 ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
@@ -112,7 +112,7 @@ export default function SymbolSelector({ selectedSymbol, onSymbolChange, venue }
                                 }}
                             >
                                 {symbolIcons[symbol as keyof typeof symbolIcons]}
-                                <span className="ml-2">{formatDisplaySymbol(symbol)}</span>
+                                <span className="truncate ml-2">{formatDisplaySymbol(symbol)}</span>
                             </div>
                         ))}
                     </div>
