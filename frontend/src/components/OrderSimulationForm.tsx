@@ -47,6 +47,21 @@ export default function OrderSimulationForm({
         return Object.keys(newErrors).length === 0;
     };
 
+    // Clear errors when input values change and become valid
+    const handlePriceChange = (value: string) => {
+        setPrice(value);
+        if (errors.price && value && !isNaN(Number(value)) && Number(value) > 0) {
+            setErrors(prev => ({ ...prev, price: '' }));
+        }
+    };
+
+    const handleQuantityChange = (value: string) => {
+        setQuantity(value);
+        if (errors.quantity && value && !isNaN(Number(value)) && Number(value) > 0) {
+            setErrors(prev => ({ ...prev, quantity: '' }));
+        }
+    };
+
     // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -126,7 +141,7 @@ export default function OrderSimulationForm({
                         <input
                             type="number"
                             value={price}
-                            onChange={(e) => setPrice(e.target.value)}
+                            onChange={(e) => handlePriceChange(e.target.value)}
                             placeholder="Enter price"
                             step="0.0001"
                             className="w-full font-sora font-semibold bg-dark border-2 border-[#3e3e3e] rounded-md py-2 px-4 text-[#ffffffcc] focus:outline-none"
@@ -141,7 +156,7 @@ export default function OrderSimulationForm({
                     <input
                         type="number"
                         value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
+                        onChange={(e) => handleQuantityChange(e.target.value)}
                         placeholder="Enter quantity"
                         step="0.01"
                         className="w-full font-sora font-semibold bg-dark border-2 border-[#3e3e3e] rounded-md py-2 px-4 text-[#ffffffcc] focus:outline-none"
@@ -158,11 +173,12 @@ export default function OrderSimulationForm({
                                 key={delayOption}
                                 type="button"
                                 onClick={() => setDelay(delayOption)}
-                                className={`font-innertight py-2 px-3 rounded-lg cursor-pointer text-sm font-bold ${
+                                className={`font-innertight py-2 px-3 rounded-lg cursor-pointer text-sm font-bold truncate ${
                                     delay === delayOption
                                         ? 'border-2 border-[#05df72] text-white'
                                         : 'bg-[#0e0e0e] text-gray-300'
                                 }`}
+                                title={delayOption === 'immediate' ? 'Instant' : delayOption}
                             >
                                 {delayOption === 'immediate' ? 'Instant' : delayOption}
                             </button>
