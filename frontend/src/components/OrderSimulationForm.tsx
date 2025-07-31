@@ -12,6 +12,15 @@ interface OrderSimulationFormProps {
     symbol: string;
     onVenueChange: (venue: Venue) => void;
     onSymbolChange: (symbol: string) => void;
+    onOrderSubmit: (orderData: {
+        venue: Venue;
+        symbol: string;
+        orderType: OrderType;
+        side: OrderSide;
+        price: string;
+        quantity: string;
+        delay: OrderDelay;
+    }) => void;
 }
 
 type OrderType = 'market' | 'limit';
@@ -22,7 +31,8 @@ export default function OrderSimulationForm({
     venue,
     symbol,
     onVenueChange,
-    onSymbolChange
+    onSymbolChange,
+    onOrderSubmit
 }: OrderSimulationFormProps) {
     const [orderType, setOrderType] = useState<OrderType>('limit');
     const [side, setSide] = useState<OrderSide>('buy');
@@ -83,9 +93,20 @@ export default function OrderSimulationForm({
                 quantity,
                 delay
             });
+
+            const orderData = {
+                venue,
+                symbol,
+                orderType,
+                side,
+                price: orderType === 'limit' ? price : '',
+                quantity,
+                delay
+            };
+
+            onOrderSubmit(orderData);
             
             setIsSubmitting(false);
-            alert(`Order ${side} ${quantity} ${symbol} at ${orderType === 'limit' ? price : 'market'} price submitted successfully!`);
         }, delayMs);
     };
 

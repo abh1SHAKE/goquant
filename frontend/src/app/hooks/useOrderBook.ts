@@ -8,7 +8,7 @@ import { throttle } from "lodash";
 import { connectByBitOrderBook } from "@/lib/websocket/bybit";
 import { connectDeribitOrderBook } from "@/lib/websocket/deribit";
 
-type OrderBookLevel = [string, string]; 
+export type OrderBookLevel = [string, string]; 
 
 type Venue = "OKX" | "ByBit" | "Deribit";
 

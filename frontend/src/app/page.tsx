@@ -15,6 +15,12 @@ export default function HomePage() {
 	const [symbol, setSymbol] = useState('BTC-USD');
 	const [venue, setVenue] = useState<Venue>('OKX');
 
+	const [simulatedOrder, setSimulatedOrder] = useState<{
+        price: number;
+        quantity: number;
+        side: 'buy' | 'sell';
+    } | null>(null);
+
   	const { bids, asks, loading, error } = useOrderBook({ venue, symbol });
 
 	return (
@@ -27,10 +33,22 @@ export default function HomePage() {
 				<div className="w-full md:w-[35%] bg-transparent md:bg-[#141414] rounded-lg p-2 md:p-4">
 					<SymbolSelector selectedSymbol={symbol} onSymbolChange={setSymbol} venue={venue} />
 
-					<OrderSimulationForm venue={venue} onVenueChange={setVenue} symbol={symbol} onSymbolChange={setSymbol}/>
+					<OrderSimulationForm 
+						venue={venue} 
+						onVenueChange={setVenue} 
+						symbol={symbol} 
+						onSymbolChange={setSymbol} 
+						onOrderSubmit={(orderData) => {
+							setSimulatedOrder({
+								price: parseFloat(orderData.price) || 0,
+								quantity: parseFloat(orderData.quantity) || 0,
+								side: orderData.side
+							});
+						}}
+					/>
 				</div>
 				<div className="w-full md:w-[65%]">
-					<OrderBookTable bids={bids} asks={asks} symbol={symbol} venue={venue} />
+					<OrderBookTable bids={bids} asks={asks} symbol={symbol} venue={venue} simulatedOrder={simulatedOrder || undefined} />
 				</div>
 			</div>
 		</div>
