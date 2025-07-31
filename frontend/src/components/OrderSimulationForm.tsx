@@ -164,7 +164,6 @@ export default function OrderSimulationForm({
                             value={price}
                             onChange={(e) => handlePriceChange(e.target.value)}
                             onWheel={(e) => {
-                                e.preventDefault();
                                 e.stopPropagation();
                                 (e.target as HTMLInputElement).blur();
                                 setTimeout(() => (e.target as HTMLInputElement).focus(), 0);
@@ -185,7 +184,6 @@ export default function OrderSimulationForm({
                         value={quantity}
                         onChange={(e) => handleQuantityChange(e.target.value)}
                         onWheel={(e) => {
-                            e.preventDefault();
                             e.stopPropagation();
                             (e.target as HTMLInputElement).blur();
                             setTimeout(() => (e.target as HTMLInputElement).focus(), 0);
