@@ -89,19 +89,11 @@ export function useOrderBook({ venue, symbol }: UseOrderBookOptions) {
     }, []);
 
     const throttledUpdate = useRef(
-        throttle(updateOrderBook, 100, { 
+        throttle(updateOrderBook, 1000, { 
             leading: true, 
             trailing: true 
         })
     );
-
-    useEffect(() => {
-        throttledUpdate.current.cancel();
-        throttledUpdate.current = throttle(updateOrderBook, 50, { 
-            leading: true, 
-            trailing: true 
-        });
-    }, [updateOrderBook]);
 
     useEffect(() => {
         setLoading(true);
