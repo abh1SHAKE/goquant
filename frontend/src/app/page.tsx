@@ -10,6 +10,7 @@ import Navbar from '@/components/Navbar';
 import { Venue } from '@/components/VenueSelector';
 import SymbolSelector from '@/components/SymbolSelector';
 import OrderSimulationForm from '@/components/OrderSimulationForm';
+import DepthChart from '@/components/DepthChart';
 
 export default function HomePage() {
 	const [symbol, setSymbol] = useState('BTC-USD');
@@ -50,6 +51,10 @@ export default function HomePage() {
 				<div className="w-full md:w-[65%]">
 					<OrderBookTable bids={bids} asks={asks} symbol={symbol} venue={venue} simulatedOrder={simulatedOrder || undefined} />
 				</div>
+			</div>
+
+			<div>
+				<DepthChart bids={bids} asks={asks}/>
 			</div>
 		</div>
 	);
