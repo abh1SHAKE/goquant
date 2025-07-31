@@ -43,13 +43,14 @@ export default function OrderBookTable({ bids, asks, symbol, venue, simulatedOrd
     const isHighlighted = (price: string, side: 'buy' | 'sell') => {
         if (!simulatedOrder) return false;
         const priceNum = parseFloat(price);
-        
+        const orderPrice = simulatedOrder.price;
+
         if (simulatedOrder.side === 'buy') {
-            // For bids - highlight if price is ≥ order price (more aggressive bids)
-            return side === 'buy' && priceNum >= simulatedOrder.price;
+            // Highlight matching asks only (i.e., where order would consume)
+            return side === 'sell' && priceNum <= orderPrice;
         } else {
-            // For asks - highlight if price is ≤ order price (more aggressive asks)
-            return side === 'sell' && priceNum <= simulatedOrder.price;
+            // Highlight matching bids only (i.e., where order would consume)
+            return side === 'buy' && priceNum >= orderPrice;
         }
     };
 

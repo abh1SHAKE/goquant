@@ -1,3 +1,6 @@
+// Custom Select component for the dropdowns
+// Same in design to the Symbol and Venue selectors
+
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';

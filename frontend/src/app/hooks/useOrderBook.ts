@@ -86,16 +86,6 @@ export function useOrderBook({ venue, symbol }: UseOrderBookOptions) {
         
         setBids(newBids);
         setAsks(newAsks);
-        
-        // Debug log to monitor map health
-        // console.log('OrderBook state:', {
-        //     bidMapSize: bidMap.current.size,
-        //     askMapSize: askMap.current.size,
-        //     outputBids: newBids.length,
-        //     outputAsks: newAsks.length,
-        //     snapshots: updateCountRef.current.snapshots,
-        //     updates: updateCountRef.current.updates
-        // });
     }, []);
 
     const throttledUpdate = useRef(
@@ -130,16 +120,8 @@ export function useOrderBook({ venue, symbol }: UseOrderBookOptions) {
         ) => {
             if (isSnapshot) {
                 updateCountRef.current.snapshots++;
-                // console.log(`📸 SNAPSHOT #${updateCountRef.current.snapshots}:`, {
-                //     inputBids: newBids.length,
-                //     inputAsks: newAsks.length
-                // });
             } else {
                 updateCountRef.current.updates++;
-                // console.log(`🔄 UPDATE #${updateCountRef.current.updates}:`, {
-                //     inputBids: newBids.length,
-                //     inputAsks: newAsks.length
-                // });
             }
 
             let hasChanges = false;
@@ -163,15 +145,6 @@ export function useOrderBook({ venue, symbol }: UseOrderBookOptions) {
                 setLoading(false);
                 setConnected(true);
             }
-
-            // Warning if maps are growing too large (indicates incorrect snapshot handling)
-            // if (bidMap.current.size > 100 || askMap.current.size > 100) {
-            //     console.warn('⚠️ Maps growing too large:', {
-            //         bidMapSize: bidMap.current.size,
-            //         askMapSize: askMap.current.size,
-            //         lastMessageType: isSnapshot ? 'snapshot' : 'update'
-            //     });
-            // }
         };
 
         const handleError = (errMsg: string) => {
