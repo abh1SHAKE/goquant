@@ -175,7 +175,7 @@ export default function DepthChart({
                                     ? scaleX(askData[askData.length - 1].price)
                                     : null;
 
-                            const minDistance = 40; // pixels
+                            const minDistance = 40;
 
                             const tooCloseToBid =
                                 bidX !== null && Math.abs(midX - bidX) < minDistance;

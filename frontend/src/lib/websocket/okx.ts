@@ -58,13 +58,6 @@ export function connectOKXOrderBook(
 				// Only the very first message is a snapshot, all others are updates
 				const isSnapshot = msg.action === 'snapshot';
 
-				// Log the message type for debugging
-				// console.log(`OKX ${isSnapshot ? 'SNAPSHOT' : 'UPDATE'}:`, {
-				// 	bids: bids.length,
-				// 	asks: asks.length,
-				// 	action: msg.action || 'undefined'
-				// });
-
 				onOrderBookUpdate(
 					bids, 
 					asks,

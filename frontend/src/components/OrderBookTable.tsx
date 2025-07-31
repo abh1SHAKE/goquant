@@ -46,10 +46,8 @@ export default function OrderBookTable({ bids, asks, symbol, venue, simulatedOrd
         const orderPrice = simulatedOrder.price;
 
         if (simulatedOrder.side === 'buy') {
-            // Highlight matching asks only (i.e., where order would consume)
             return side === 'sell' && priceNum <= orderPrice;
         } else {
-            // Highlight matching bids only (i.e., where order would consume)
             return side === 'buy' && priceNum >= orderPrice;
         }
     };
