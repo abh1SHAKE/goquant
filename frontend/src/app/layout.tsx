@@ -33,8 +33,8 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-	title: "GoQuant",
-	description: "You left the fridge open, somebody just took a sandwich.",
+	title: "Orderbook66",
+	description: "Execute your trades, not the Jedi.",
 };
 
 export default function RootLayout({
